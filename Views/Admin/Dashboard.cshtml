@@ -1,0 +1,153 @@
+﻿@model Organi.Models.ViewModels.DashboardViewModel
+@{ ViewData["Title"] = "Dashboard"; ViewData["ActiveMenu"] = "Dashboard"; }
+
+<!-- İstatistik Kartları -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+    <div style="background:white;border:1px solid #e0e0e0;border-radius:10px;padding:20px;display:flex;align-items:center;gap:16px">
+        <div style="width:48px;height:48px;border-radius:12px;background:#e8f5e9;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📦</div>
+        <div>
+            <p style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Toplam Ürün</p>
+            <p style="font-size:26px;font-weight:800;color:#1a1a1a;line-height:1">@Model.TotalProducts</p>
+            <p style="font-size:11px;color:#4caf50;margin-top:3px">● Aktif katalog</p>
+        </div>
+    </div>
+    <div style="background:white;border:1px solid #e0e0e0;border-radius:10px;padding:20px;display:flex;align-items:center;gap:16px">
+        <div style="width:48px;height:48px;border-radius:12px;background:#e3f2fd;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🛒</div>
+        <div>
+            <p style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Toplam Sipariş</p>
+            <p style="font-size:26px;font-weight:800;color:#1a1a1a;line-height:1">@Model.TotalOrders</p>
+            <p style="font-size:11px;color:#1976d2;margin-top:3px">● Tüm siparişler</p>
+        </div>
+    </div>
+    <div style="background:white;border:1px solid #e0e0e0;border-radius:10px;padding:20px;display:flex;align-items:center;gap:16px">
+        <div style="width:48px;height:48px;border-radius:12px;background:#fff3e0;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">💬</div>
+        <div>
+            <p style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Okunmamış Mesaj</p>
+            <p style="font-size:26px;font-weight:800;color:#1a1a1a;line-height:1">@Model.UnreadMessages</p>
+            <p style="font-size:11px;color:#f57c00;margin-top:3px">● Yanıt bekliyor</p>
+        </div>
+    </div>
+    <div style="background:white;border:1px solid #e0e0e0;border-radius:10px;padding:20px;display:flex;align-items:center;gap:16px">
+        <div style="width:48px;height:48px;border-radius:12px;background:#fce4ec;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">⚠️</div>
+        <div>
+            <p style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Düşük Stok</p>
+            <p style="font-size:26px;font-weight:800;color:#1a1a1a;line-height:1">@Model.LowStockProducts</p>
+            <p style="font-size:11px;color:#e53935;margin-top:3px">● 10'un altında</p>
+        </div>
+    </div>
+</div>
+
+<!-- Son Siparişler + Son Mesajlar -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+
+    <!-- Son Siparişler -->
+    <div style="background:white;border:1px solid #e0e0e0;border-radius:10px;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid #e0e0e0">
+            <span style="font-size:14px;font-weight:700;color:#1a1a1a">Son Siparişler</span>
+            <a asp-action="Orders" class="adm-btn adm-btn--outline" style="font-size:11px;padding:5px 10px">Tümünü Gör</a>
+        </div>
+        @if (!Model.RecentOrders.Any())
+        {
+            <div style="padding:32px;text-align:center;color:#999;font-size:13px">Henüz sipariş yok.</div>
+
+        }
+        else
+        {
+
+            <table style="width:100%;border-collapse:collapse;font-size:13px">
+                <thead>
+                    <tr style="background:#fafafa">
+                        <th style="text-align:left;padding:9px 16px;font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid #e0e0e0">#</th>
+                        <th style="text-align:left;padding:9px 16px;font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid #e0e0e0">Müşteri</th>
+                        <th style="text-align:left;padding:9px 16px;font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid #e0e0e0">Tutar</th>
+                        <th style="text-align:left;padding:9px 16px;font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid #e0e0e0">Durum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var o in Model.RecentOrders)
+                    {
+
+
+                        var (sc, ss) = o.Status switch {
+
+                            Organi.Models.Entities.OrderStatus.Delivered => ("#4caf50", "Teslim"),
+
+                            Organi.Models.Entities.OrderStatus.Cancelled => ("#e53935", "İptal"),
+
+                            Organi.Models.Entities.OrderStatus.Shipped => ("#1976d2", "Kargoda"),
+
+                            _ => ("#f57c00", "Bekliyor")
+
+
+                        };
+                    <tr style="border-bottom:1px solid #f5f5f5">
+                        <td style="padding:11px 16px;color:#999;font-size:12px">#@o.Id</td>
+                        <td style="padding:11px 16px">
+                            <p style="font-weight:600;font-size:13px;color:#1a1a1a">@o.CustomerName</p>
+                            <p style="font-size:11px;color:#999">@o.CreatedAt.ToString("dd.MM.yyyy")</p>
+                        </td>
+                        <td style="padding:11px 16px;font-weight:700;color:#4caf50;font-size:13px">₺@o.TotalPrice.ToString("F2")</td>
+                        <td style="padding:11px 16px"><span style="font-size:11px;color:@sc;font-weight:600">● @ss</span></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <!-- Son Mesajlar -->
+    <div style="background:white;border:1px solid #e0e0e0;border-radius:10px;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid #e0e0e0">
+            <span style="font-size:14px;font-weight:700;color:#1a1a1a">Son Mesajlar</span>
+            <a asp-action="Messages" class="adm-btn adm-btn--outline" style="font-size:11px;padding:5px 10px">Tümünü Gör</a>
+        </div>
+        @if (!Model.RecentMessages.Any())
+        {
+            <div style="padding:32px;text-align:center;color:#999;font-size:13px">Henüz mesaj yok.</div>
+        }
+        else
+        {
+            @foreach (var m in Model.RecentMessages)
+            {
+                <div style="padding:13px 20px;border-bottom:1px solid #f5f5f5;display:flex;align-items:flex-start;gap:10px">
+                    <span style="width:7px;height:7px;border-radius:50%;background:@(m.IsRead?"transparent":"#4caf50");flex-shrink:0;margin-top:5px;display:inline-block;border:@(m.IsRead?"1px solid #ddd":"none")"></span>
+                    <div style="flex:1;min-width:0">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+                            <span style="font-weight:700;font-size:13px;color:#1a1a1a">@m.FullName</span>
+                            <span style="font-size:11px;color:#999;white-space:nowrap;margin-left:8px">@m.CreatedAt.ToString("dd.MM HH:mm")</span>
+                        </div>
+                        <p style="font-size:12px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@m.Message</p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+</div>
+
+<!-- Son İşlemler -->
+<div style="background:white;border:1px solid #e0e0e0;border-radius:10px;overflow:hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid #e0e0e0">
+        <span style="font-size:14px;font-weight:700;color:#1a1a1a">Son İşlemler</span>
+        <a asp-action="Logs" class="adm-btn adm-btn--outline" style="font-size:11px;padding:5px 10px">Tüm Loglar</a>
+    </div>
+    @if (!Model.RecentLogs.Any())
+    {
+        <div style="padding:32px;text-align:center;color:#999;font-size:13px">Henüz log kaydı yok.</div>
+    }
+    else
+    {
+        <div style="padding:14px 16px;display:flex;flex-direction:column;gap:6px">
+        @foreach (var log in Model.RecentLogs)
+        {
+            <div style="display:flex;align-items:center;gap:12px;padding:8px 12px;background:#fafafa;border-radius:6px;border-left:3px solid #4caf50">
+                <span style="font-size:11px;color:#999;white-space:nowrap;min-width:80px">@log.CreatedAt.ToString("dd.MM HH:mm")</span>
+                <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap;background:@(log.Action=="Deleted"?"#fdecea":log.Action=="Created"?"#e8f5e9":"#fff3e0");color:@(log.Action=="Deleted"?"#e53935":log.Action=="Created"?"#4caf50":"#f57c00")">
+                    @(log.Action switch { "Created"=>"EKLENDI","Updated"=>"GÜNCELLENDI","Deleted"=>"SİLİNDİ",_=>log.Action })
+                </span>
+                <span style="font-size:12px;color:#555">@log.Description</span>
+            </div>
+        }
+        </div>
+    }
+</div>

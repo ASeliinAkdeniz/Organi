@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — Organi Admin</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+</head>
+<body class="adm-body">
+
+    <div class="adm-sidebar">
+        <div class="adm-logo">
+            <div class="adm-logo-name">org<span>ani</span></div>
+            <div class="adm-logo-sub">Yönetim Paneli</div>
+        </div>
+        <nav class="adm-nav">
+            <div class="adm-nav-label">Genel</div>
+            <a asp-controller="Admin" asp-action="Dashboard" class="adm-nav-item @(ViewData["ActiveMenu"]?.ToString() == "Dashboard" ? "active" : "")">
+                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>
+                Dashboard
+            </a>
+            <div class="adm-nav-label" style="margin-top:6px">Katalog</div>
+            <a asp-controller="Admin" asp-action="Index" class="adm-nav-item @(ViewData["ActiveMenu"]?.ToString() == "Products" ? "active" : "")">
+                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
+                Ürünler
+            </a>
+            <a asp-controller="Admin" asp-action="Orders" class="adm-nav-item @(ViewData["ActiveMenu"]?.ToString() == "Orders" ? "active" : "")">
+                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
+                Siparişler
+            </a>
+            <div class="adm-nav-label" style="margin-top:6px">Sistem</div>
+            <a asp-controller="Admin" asp-action="Messages" class="adm-nav-item @(ViewData["ActiveMenu"]?.ToString()=="Messages"?"active":"")">
+                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+                Mesajlar
+                @{
+                    var unread = ViewBag.UnreadCount as int?; if (unread > 0)
+                    {
+                        <span class="adm-badge">@unread</span>
+                    }
+
+                }
+            </a>
+            <a asp-controller="Admin" asp-action="Logs" class="adm-nav-item @(ViewData["ActiveMenu"]?.ToString() == "Logs" ? "active" : "")">
+                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
+                Loglar
+            </a>
+        </nav>
+        <div class="adm-sidebar-footer">
+            <a asp-controller="Home" asp-action="Index" class="adm-back-link">← Siteye Dön</a>
+        </div>
+    </div>
+
+    <div class="adm-wrapper">
+        <header class="adm-topbar">
+            <h1 class="adm-page-title">@ViewData["Title"]</h1>
+            <div class="adm-topbar-right">
+                @if (TempData["Success"] != null)
+                {
+                    <span class="adm-toast adm-toast--success">@TempData["Success"]</span>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <span class="adm-toast adm-toast--error">@TempData["Error"]</span>
+                }
+                <div class="adm-avatar">A</div>
+            </div>
+        </header>
+        <main class="adm-main">@RenderBody()</main>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

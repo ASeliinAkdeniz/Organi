@@ -1,0 +1,20 @@
+@model List<Organi.Models.Entities.ContactMessage>
+@{ ViewData["Title"] = "Mesajlar"; ViewData["ActiveMenu"] = "Messages"; }
+@if (!Model.Any()) { <div class="adm-card" style="text-align:center;padding:48px;color:#999">Henüz mesaj yok.</div> }
+else {
+<div style="display:flex;flex-direction:column;gap:10px">
+@foreach (var m in Model) {
+<div class="adm-card" style="padding:18px;@(m.IsRead?"opacity:0.6":"border-color:rgba(76,175,80,0.4)")">
+    <div style="display:flex;justify-content:space-between;gap:16px">
+        <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                @if(!m.IsRead){<span style="width:7px;height:7px;border-radius:50%;background:#4caf50;display:inline-block"></span>}
+                <span style="font-weight:700">@m.FullName</span><span style="color:#999;font-size:12px">@m.Email</span>
+                <span style="color:#999;font-size:11px;margin-left:auto">@m.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
+            </div>
+            <p style="color:#555;font-size:13px;line-height:1.6">@m.Message</p>
+        </div>
+        @if(!m.IsRead){<form asp-action="MarkRead" asp-route-id="@m.Id" method="post">@Html.AntiForgeryToken()<button type="submit" class="adm-btn adm-btn--outline">Okundu</button></form>}
+    </div>
+</div>}
+</div>}

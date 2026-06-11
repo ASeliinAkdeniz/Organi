@@ -1,0 +1,9 @@
+@model List<string>
+@{ ViewData["Title"] = "Loglar"; ViewData["ActiveMenu"] = "Logs"; }
+<div class="adm-card">
+    <div class="adm-card-header"><span class="adm-card-title">Audit Log (Son 100 kayıt)</span></div>
+    @if(!Model.Any()){<div style="text-align:center;padding:48px;color:#999">Henüz log yok.</div>}
+    else{<div style="padding:16px;display:flex;flex-direction:column;gap:6px">
+    @foreach(var line in Model){<div style="font-family:monospace;font-size:12px;color:#555;background:#fafafa;padding:8px 12px;border-radius:6px;border-left:2px solid #4caf50">@line</div>}
+    </div>}
+</div>

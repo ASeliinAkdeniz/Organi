@@ -1,0 +1,32 @@
+@model List<Organi.Models.Entities.Product>
+@{ ViewData["Title"] = "Ürünler"; ViewData["ActiveMenu"] = "Products"; }
+
+<div style="display:flex;justify-content:flex-end;margin-bottom:20px">
+    <a asp-action="Create" class="adm-btn adm-btn--primary">+ Yeni Ürün</a>
+</div>
+<div class="adm-card">
+    <div class="adm-card-header"><span class="adm-card-title">Tüm Ürünler (@Model.Count)</span></div>
+    <table class="adm-table">
+        <thead><tr><th>#</th><th>Ürün Adı</th><th>Kategori</th><th>Fiyat</th><th>Stok</th><th>Durum</th><th>İşlem</th></tr></thead>
+        <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td style="color:#999">@p.Id</td>
+                <td><p style="font-weight:700">@p.Name</p><p style="font-size:11px;color:#999">@p.Unit</p></td>
+                <td style="font-size:12px">@p.Category</td>
+                <td><span style="font-weight:700;color:#4caf50">₺@p.Price.ToString("F2")</span>@if(p.OldPrice.HasValue){<span style="font-size:11px;color:#999;text-decoration:line-through;margin-left:4px">₺@p.OldPrice.Value.ToString("F2")</span>}</td>
+                <td>@p.Stock</td>
+                <td>@if(p.IsActive){<span style="color:#4caf50;font-size:12px">● Aktif</span>}else{<span style="color:#999;font-size:12px">● Pasif</span>}</td>
+                <td style="display:flex;gap:6px">
+                    <a asp-action="Edit" asp-route-id="@p.Id" class="adm-btn adm-btn--outline">Düzenle</a>
+                    <form asp-action="Delete" asp-route-id="@p.Id" method="post" onsubmit="return confirm('Silinsin mi?')">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="adm-btn adm-btn--danger">Sil</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

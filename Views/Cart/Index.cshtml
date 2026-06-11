@@ -1,0 +1,112 @@
+@model Organi.Models.ViewModels.CartViewModel
+@{
+    ViewData["Title"] = "Sepet"; ViewData["Page"] = "Cart";
+}
+
+<div class="org-page-header">
+    <div class="org-page-header-content">
+        <h1>Sepet</h1>
+        <div class="org-breadcrumb">
+            <span class="org-breadcrumb-icon">🏠</span>
+            <a asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+            <span>›</span>
+            <span style="color:white">Sepet</span>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    @if (TempData["CartSuccess"] != null)
+    {
+        <div class="org-alert org-alert--success" style="margin-top:20px">
+            <span>@TempData["CartSuccess"]</span>
+            <span style="cursor:pointer" onclick="this.parentElement.remove()">✕</span>
+        </div>
+    }
+
+    @if (!Model.Items.Any())
+    {
+        <div style="text-align:center;padding:80px 0;color:#999">
+            <p style="font-size:48px;margin-bottom:16px">🛒</p>
+            <p style="font-size:18px;font-weight:700;color:#333;margin-bottom:8px">Sepetiniz boş</p>
+            <p style="margin-bottom:24px">Alışverişe başlamak için mağazamıza göz atın.</p>
+            <a asp-controller="Shop" asp-action="Index" class="btn-green">Alışverişe Başla</a>
+        </div>
+    }
+    else
+    {
+        <div class="org-cart-layout">
+            <div>
+                <div class="org-cart-table">
+                    <div class="org-cart-head">
+                        <span>Fotoğraf</span>
+                        <span>Ürün Adı</span>
+                        <span>Fiyat</span>
+                        <span>Miktar</span>
+                        <span>Toplam</span>
+                    </div>
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="org-cart-row">
+                            <img src="@item.Product!.ImageUrl" alt="@item.Product.Name" class="org-cart-img" onerror="this.src='/images/placeholder.png'" />
+                            <div>
+                                <p class="org-cart-name">@item.Product.Name</p>
+                                <p class="org-cart-unit">/ @item.Product.Unit</p>
+                            </div>
+                            <span style="font-size:14px;font-weight:700;color:#333">₺@item.Product.Price.ToString("F2")</span>
+                            <div class="org-qty">
+                                <form asp-controller="Cart" asp-action="UpdateQty" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <input type="hidden" name="quantity" value="@(item.Quantity - 1)" />
+                                    <button type="submit" class="org-qty-btn">−</button>
+                                </form>
+                                <span class="org-qty-val">@item.Quantity</span>
+                                <form asp-controller="Cart" asp-action="UpdateQty" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <input type="hidden" name="quantity" value="@(item.Quantity + 1)" />
+                                    <button type="submit" class="org-qty-btn">+</button>
+                                </form>
+                                <span style="font-size:12px;color:#999">@item.Product.Unit</span>
+                                <form asp-controller="Cart" asp-action="UpdateQty" method="post" style="margin-left:4px">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <input type="hidden" name="quantity" value="@item.Quantity" />
+                                    <button type="submit" class="org-qty-btn" title="Yenile" style="font-size:12px">↺</button>
+                                </form>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px">
+                                <span class="org-cart-total-price">₺@((item.Product.Price * (decimal)item.Quantity).ToString("F2"))</span>
+                                <form asp-controller="Cart" asp-action="Remove" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="org-remove-btn">✕</button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:16px">
+                    <a asp-controller="Shop" asp-action="Index" class="btn-outline">← Alışverişe Devam Et</a>
+                    <a asp-controller="Compare" asp-action="Index" class="btn-outline">⇄ Karşılaştır</a>
+                </div>
+            </div>
+
+            <div class="org-order-summary">
+                <p class="org-summary-title">Sipariş Özeti</p>
+                <div class="org-summary-row"><span>Ara Toplam</span><span>₺@Model.Subtotal.ToString("F2")</span></div>
+                <div class="org-summary-row">
+                    <span>Kargo</span>
+                    <span>@(Model.ShippingFee == 0 ? "Ücretsiz" : $"₺{Model.ShippingFee:F2}")</span>
+                </div>
+                @if (Model.ShippingFee > 0)
+                {
+                    <p style="font-size:11px;color:#999;margin-bottom:8px">₺99 üzeri alışverişlerde kargo ücretsiz.</p>
+                }
+                <div class="org-summary-total"><span>Toplam</span><span>₺@Model.Total.ToString("F2")</span></div>
+                <button onclick="window.location.href='@Url.Action("Checkout", "Cart")'" class="org-checkout-btn">Siparişi Tamamla →</button>
+            </div>
+        </div>
+    }
+</div>

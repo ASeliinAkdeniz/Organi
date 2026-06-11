@@ -1,0 +1,106 @@
+@model Organi.Models.ViewModels.CompareViewModel
+@{ ViewData["Title"] = "Ürün Karşılaştır"; ViewData["Page"] = "Compare"; }
+
+<div class="org-page-header">
+    <div class="org-page-header-content">
+        <h1>Ürün Karşılaştır</h1>
+        <div class="org-breadcrumb">
+            <span class="org-breadcrumb-icon">🏠</span>
+            <a asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+            <span>›</span>
+            <span style="color:white">Karşılaştır</span>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="padding-top:32px;padding-bottom:48px">
+    @if (!Model.Products.Any())
+    {
+        <div style="text-align:center;padding:60px 0;color:#999">
+            <p style="font-size:36px;margin-bottom:14px">⇄</p>
+            <p style="font-size:16px;font-weight:700;color:#333;margin-bottom:8px">Karşılaştırma listesi boş</p>
+            <p style="margin-bottom:24px">Ürün sayfasından karşılaştırmak istediğiniz ürünleri ekleyin.</p>
+            <a asp-controller="Shop" asp-action="Index" class="btn-green">Mağazaya Git</a>
+        </div>
+    }
+    else
+    {
+        
+            int cols = Model.Products.Count + 1; 
+            string gridCols = "160px " + string.Join(" ", Enumerable.Repeat("1fr", Model.Products.Count));
+        
+
+        <div class="org-compare-table">
+            <!-- Header row -->
+            <div style="display:grid;grid-template-columns:@gridCols;border-bottom:1px solid #e0e0e0">
+                <div style="padding:16px 20px;background:#fafafa;border-right:1px solid #e0e0e0"></div>
+                @foreach (var p in Model.Products)
+                {
+                    <div style="padding:16px 20px;text-align:center;border-right:1px solid #e0e0e0;position:relative">
+                        <form asp-controller="Compare" asp-action="Remove" method="post" style="position:absolute;top:10px;right:10px">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="productId" value="@p.Id" />
+                            <button type="submit" style="background:none;border:none;color:#999;cursor:pointer;font-size:16px">✕</button>
+                        </form>
+                        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#4caf50">
+                            @(p.Category switch { ProductCategory.Sebzeler=>"Sebzeler", ProductCategory.Meyveler=>"Meyveler", ProductCategory.SutUrunleri=>"Süt Ürünleri", ProductCategory.Atistirmalik=>"Atıştırmalık", _=>p.Category.ToString() })
+                        </span>
+                        <br/>
+                        <img src="@p.ImageUrl" alt="@p.Name" style="width:80px;height:80px;object-fit:contain;margin:12px auto;display:block" onerror="this.src='/images/placeholder.png'" />
+                        <p style="font-weight:700;font-size:14px;color:#1a1a1a;margin-bottom:4px">@p.Name</p>
+                        <div style="color:#f5c518;font-size:12px;margin-bottom:4px">@string.Concat(Enumerable.Range(1,5).Select(i=>i<=(int)p.Rating?"★":"☆")) <span style="color:#999">(@p.RatingCount)</span></div>
+                        <span style="font-size:17px;font-weight:800;color:#4caf50">₺@p.Price.ToString("F2")</span>
+                    </div>
+                }
+            </div>
+
+            @{ var rows = new[] {
+                ("Fiyat", Model.Products.Select(p => $"₺{p.Price:F2}").ToList()),
+                ("Kategori", Model.Products.Select(p => p.Category switch { ProductCategory.Sebzeler=>"Sebzeler", ProductCategory.Meyveler=>"Meyveler", ProductCategory.SutUrunleri=>"Süt Ürünleri", ProductCategory.Atistirmalik=>"Atıştırmalık", _=>p.Category.ToString() }).ToList()),
+                ("Puan", Model.Products.Select(p => $"{p.Rating} / 5").ToList()),
+                ("Stok", Model.Products.Select(p => p.Stock > 0 ? $"✓ {p.Stock} adet" : "✗ Tükendi").ToList()),
+                ("Etiket", Model.Products.Select(p => p.Badge ?? "—").ToList()),
+                ("Porsiyon", Model.Products.Select(p => p.ServingSize ?? "—").ToList()),
+                ("Enerji (kcal)", Model.Products.Select(p => p.CaloriesPer100g?.ToString() ?? "—").ToList()),
+                ("Yağ (g)", Model.Products.Select(p => p.FatPer100g?.ToString() ?? "—").ToList()),
+                ("Karbonhidrat (g)", Model.Products.Select(p => p.CarbsPer100g?.ToString() ?? "—").ToList()),
+                ("Protein (g)", Model.Products.Select(p => p.ProteinPer100g?.ToString() ?? "—").ToList()),
+                ("Açıklama", Model.Products.Select(p => p.Description).ToList()),
+            }; }
+
+            @foreach (var (label, values) in rows)
+            {
+                <div style="display:grid;grid-template-columns:@gridCols;border-bottom:1px solid #e0e0e0">
+                    <div style="padding:12px 20px;background:#fafafa;border-right:1px solid #e0e0e0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#666;display:flex;align-items:center;gap:6px">
+                        <span style="color:#4caf50">●</span> @label
+                    </div>
+                    @foreach (var val in values)
+                    {
+                        <div style="padding:12px 20px;border-right:1px solid #e0e0e0;font-size:13px;color:#333;display:flex;align-items:center;justify-content:center;text-align:center">
+                            @val
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Sepete Ekle satırı -->
+            <div style="display:grid;grid-template-columns:@gridCols">
+                <div style="padding:14px 20px;background:#fafafa;border-right:1px solid #e0e0e0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#666;display:flex;align-items:center;gap:6px"><span style="color:#4caf50">●</span> İşlem</div>
+                @foreach (var p in Model.Products)
+                {
+                    <div style="padding:14px 20px;border-right:1px solid #e0e0e0;display:flex;align-items:center;justify-content:center">
+                        <form asp-controller="Cart" asp-action="Add" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="productId" value="@p.Id" />
+                            <button type="submit" class="btn-green" style="font-size:12px;padding:8px 16px;border-radius:6px">🛒 Sepete Ekle</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div style="text-align:center;margin-top:16px">
+            <a asp-controller="Shop" asp-action="Index" class="btn-outline">+ Daha Fazla Ürün Ekle</a>
+        </div>
+    }
+</div>

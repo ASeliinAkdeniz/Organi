@@ -1,0 +1,79 @@
+@model Organi.Models.ViewModels.ProductUpdateViewModel
+@{ ViewData["Title"] = "Ürün Düzenle"; ViewData["ActiveMenu"] = "Products"; }
+
+<div class="adm-card" style="max-width:700px">
+    <div class="adm-card-header">
+        <span class="adm-card-title">Ürün Düzenle</span>
+        <a asp-action="Index" class="adm-btn adm-btn--outline">← Geri</a>
+    </div>
+    <div style="padding:24px">
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <div class="org-form-group">
+                    <label class="org-label">Ürün Adı *</label>
+                    <input name="Name" class="org-input" value="@Model.Name" required />
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Kategori *</label>
+                    <select name="Category" class="org-select">
+                        <option value="1" @@(Model.Category == Organi.Models.Entities.ProductCategory.Sebzeler ? "selected" : "")>Sebzeler</option>
+                        <option value="2" @@(Model.Category == Organi.Models.Entities.ProductCategory.Meyveler ? "selected" : "")>Meyveler</option>
+                        <option value="3" @@(Model.Category == Organi.Models.Entities.ProductCategory.SutUrunleri ? "selected" : "")>Süt Ürünleri</option>
+                        <option value="4" @@(Model.Category == Organi.Models.Entities.ProductCategory.Balikci ? "selected" : "")>Balıkçı</option>
+                        <option value="5" @@(Model.Category == Organi.Models.Entities.ProductCategory.Atistirmalik ? "selected" : "")>Atıştırmalık</option>
+                        <option value="6" @@(Model.Category == Organi.Models.Entities.ProductCategory.Icecekler ? "selected" : "")>İçecekler</option>
+                    </select>
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Fiyat (₺) *</label>
+                    <input name="Price" type="number" step="0.01" class="org-input" value="@Model.Price" required />
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Eski Fiyat (₺)</label>
+                    <input name="OldPrice" type="number" step="0.01" class="org-input" value="@Model.OldPrice" />
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Stok *</label>
+                    <input name="Stock" type="number" class="org-input" value="@Model.Stock" required />
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Birim</label>
+                    <input name="Unit" class="org-input" value="@Model.Unit" />
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Görsel URL</label>
+                    <input name="ImageUrl" class="org-input" value="@Model.ImageUrl" />
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Etiket</label>
+                    <input name="Badge" class="org-input" value="@Model.Badge" />
+                </div>
+            </div>
+            <div class="org-form-group">
+                <label class="org-label">Açıklama</label>
+                <textarea name="Description" class="org-textarea">@Model.Description</textarea>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
+                <div class="org-form-group"><label class="org-label">Kalori</label><input name="CaloriesPer100g" type="number" class="org-input" value="@Model.CaloriesPer100g" /></div>
+                <div class="org-form-group"><label class="org-label">Yağ (g)</label><input name="FatPer100g" type="number" step="0.1" class="org-input" value="@Model.FatPer100g" /></div>
+                <div class="org-form-group"><label class="org-label">Karbonhidrat (g)</label><input name="CarbsPer100g" type="number" step="0.1" class="org-input" value="@Model.CarbsPer100g" /></div>
+                <div class="org-form-group"><label class="org-label">Protein (g)</label><input name="ProteinPer100g" type="number" step="0.1" class="org-input" value="@Model.ProteinPer100g" /></div>
+            </div>
+            <div class="org-form-group">
+                <label class="org-label">Porsiyon</label>
+                <input name="ServingSize" class="org-input" value="@Model.ServingSize" />
+            </div>
+            <div style="display:flex;gap:20px;margin-bottom:20px">
+                <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
+                    <input type="checkbox" name="IsFeatured" value="true" @(Model.IsFeatured ? "checked" : "") /> Öne Çıkan
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
+                    <input type="checkbox" name="IsActive" value="true" @(Model.IsActive ? "checked" : "") /> Aktif
+                </label>
+            </div>
+            <button type="submit" class="btn-green" style="width:100%;justify-content:center;border-radius:8px;padding:12px">Güncelle</button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Sipariş Alındı"; ViewData["Page"] = "Cart";
+}
+
+<div style="max-width:560px;margin:80px auto;text-align:center;padding:0 24px">
+    <div style="width:72px;height:72px;border-radius:50%;background:#e8f5e9;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 20px">✓</div>
+    <h1 style="font-size:26px;font-weight:800;color:#1a1a1a;margin-bottom:8px">Siparişiniz Alındı!</h1>
+    <p style="color:#666;font-size:15px;margin-bottom:6px">Sipariş No: <strong style="color:#4caf50">#@ViewBag.OrderId</strong></p>
+    <p style="color:#999;font-size:13px;margin-bottom:32px">Siparişiniz onaylandı. En kısa sürede hazırlanıp kargoya verilecektir.</p>
+
+    <div style="background:#f9fbe7;border:1px solid #c5e1a5;border-radius:12px;padding:20px;margin-bottom:28px;text-align:left">
+        <p style="font-weight:700;font-size:13px;color:#388e3c;margin-bottom:10px">📦 Sonraki Adımlar</p>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px">
+            <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#4caf50">✓</span> Sipariş e-postanıza gönderildi</li>
+            <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#4caf50">✓</span> Ürünleriniz hazırlanıyor</li>
+            <li style="font-size:13px;color:#555;display:flex;align-items:center;gap:8px"><span style="color:#4caf50">✓</span> Kargo takip numarası iletilecek</li>
+        </ul>
+    </div>
+
+    <div style="display:flex;gap:12px;justify-content:center">
+        <a asp-controller="Shop" asp-action="Index" class="btn-green">Alışverişe Devam Et</a>
+        <a asp-controller="Home" asp-action="Index" class="btn-outline">Ana Sayfa</a>
+    </div>
+</div>

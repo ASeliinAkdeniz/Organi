@@ -1,0 +1,279 @@
+/* ── Organi Admin Panel ──────────────────────────────── */
+.adm-body {
+    display: flex;
+    min-height: 100vh;
+    background: #f5f5f5;
+}
+
+.adm-sidebar {
+    width: 230px;
+    background: #1a1a1a;
+    border-right: 1px solid #2a2a2a;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-height: 100vh;
+    z-index: 50;
+}
+
+.adm-logo {
+    padding: 22px 20px 18px;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.adm-logo-name {
+    font-size: 19px;
+    font-weight: 800;
+    color: white;
+    font-style: italic;
+}
+
+    .adm-logo-name span {
+        color: #4caf50;
+    }
+
+.adm-logo-sub {
+    font-size: 10px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+}
+
+.adm-nav {
+    flex: 1;
+    padding: 14px 0;
+}
+
+.adm-nav-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #666;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 20px 4px;
+}
+
+.adm-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    color: #aaa;
+    text-decoration: none;
+    font-size: 13px;
+    border-left: 2px solid transparent;
+    transition: all .15s;
+}
+
+    .adm-nav-item:hover {
+        color: white;
+        background: rgba(255,255,255,0.05);
+    }
+
+    .adm-nav-item.active {
+        color: #4caf50;
+        background: rgba(76,175,80,0.1);
+        border-left-color: #4caf50;
+    }
+
+    .adm-nav-item svg {
+        flex-shrink: 0;
+    }
+
+.adm-badge {
+    margin-left: auto;
+    background: #4caf50;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 10px;
+}
+
+.adm-sidebar-footer {
+    padding: 14px 20px;
+    border-top: 1px solid #2a2a2a;
+}
+
+.adm-back-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #888;
+    text-decoration: none;
+    font-size: 12px;
+    transition: color .15s;
+}
+
+    .adm-back-link:hover {
+        color: #4caf50;
+    }
+
+.adm-wrapper {
+    margin-left: 230px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.adm-topbar {
+    height: 56px;
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.adm-page-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.adm-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.adm-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e8f5e9;
+    color: #4caf50;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.adm-toast {
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 6px;
+}
+
+.adm-toast--success {
+    background: #e8f5e9;
+    color: #388e3c;
+    border: 1px solid rgba(76,175,80,0.3);
+}
+
+.adm-toast--error {
+    background: #fdecea;
+    color: #c62828;
+    border: 1px solid rgba(229,57,53,0.3);
+}
+
+.adm-main {
+    flex: 1;
+    padding: 28px 48px;
+    background: #f5f5f5;
+}
+
+.adm-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.adm-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.adm-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.adm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+    .adm-table th {
+        text-align: left;
+        padding: 10px 16px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid #e0e0e0;
+        background: #fafafa;
+    }
+
+    .adm-table td {
+        padding: 13px 16px;
+        border-bottom: 1px solid #f0f0f0;
+        color: #333;
+        vertical-align: middle;
+    }
+
+    .adm-table tr:hover td {
+        background: #fafff5;
+    }
+
+.adm-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: all .15s;
+}
+
+.adm-btn--primary {
+    background: #4caf50;
+    color: white;
+    border-color: #4caf50;
+}
+
+    .adm-btn--primary:hover {
+        background: #388e3c;
+    }
+
+.adm-btn--outline {
+    background: transparent;
+    border-color: #e0e0e0;
+    color: #333;
+}
+
+    .adm-btn--outline:hover {
+        border-color: #4caf50;
+        color: #4caf50;
+    }
+
+.adm-btn--danger {
+    background: transparent;
+    border-color: rgba(229,57,53,.3);
+    color: #e53935;
+}
+
+    .adm-btn--danger:hover {
+        background: #fdecea;
+    }

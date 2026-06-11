@@ -1,0 +1,9 @@
+@model List<Organi.Models.Entities.Order>
+@{ ViewData["Title"] = "Siparişler"; ViewData["ActiveMenu"] = "Orders"; }
+<div class="adm-card">
+    <div class="adm-card-header"><span class="adm-card-title">Tüm Siparişler (@Model.Count)</span></div>
+    @if(!Model.Any()){<div style="text-align:center;padding:48px;color:#999">Henüz sipariş yok.</div>}
+    else{<table class="adm-table"><thead><tr><th>#</th><th>Müşteri</th><th>Tutar</th><th>Durum</th><th>Tarih</th></tr></thead><tbody>
+    @foreach(var o in Model){<tr><td style="color:#999">@o.Id</td><td><p style="font-weight:700">@o.CustomerName</p><p style="font-size:11px;color:#999">@o.CustomerEmail</p></td><td style="font-weight:700;color:#4caf50">₺@o.TotalPrice.ToString("F2")</td><td><span style="font-size:12px;color:@(o.Status==Organi.Models.Entities.OrderStatus.Delivered?"#4caf50":o.Status==Organi.Models.Entities.OrderStatus.Cancelled?"#e53935":"#f57f17")">● @o.Status</span></td><td style="font-size:12px;color:#999">@o.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td></tr>}
+    </tbody></table>}
+</div>

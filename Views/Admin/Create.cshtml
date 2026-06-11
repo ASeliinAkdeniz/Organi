@@ -1,0 +1,75 @@
+@model Organi.Models.ViewModels.ProductCreateViewModel
+@{
+    ViewData["Title"] = "Yeni Ürün"; ViewData["ActiveMenu"] = "Products";
+}
+
+<div class="adm-card" style="max-width:700px">
+    <div class="adm-card-header">
+        <span class="adm-card-title">Yeni Ürün Ekle</span>
+        <a asp-action="Index" class="adm-btn adm-btn--outline">← Geri</a>
+    </div>
+    <div style="padding:24px">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <div class="org-form-group">
+                    <label class="org-label">Ürün Adı *</label>
+                    <input name="Name" class="org-input" required />
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Kategori *</label>
+                    <select name="Category" class="org-select">
+                        <option value="1">Sebzeler</option>
+                        <option value="2">Meyveler</option>
+                        <option value="3">Süt Ürünleri</option>
+                        <option value="4">Balıkçı</option>
+                        <option value="5">Atıştırmalık</option>
+                        <option value="6">İçecekler</option>
+                    </select>
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Fiyat (₺) *</label>
+                    <input name="Price" type="number" step="0.01" class="org-input" required />
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Eski Fiyat (₺)</label>
+                    <input name="OldPrice" type="number" step="0.01" class="org-input" />
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Stok *</label>
+                    <input name="Stock" type="number" class="org-input" required />
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Birim</label>
+                    <input name="Unit" class="org-input" value="kg" />
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Görsel URL</label>
+                    <input name="ImageUrl" class="org-input" placeholder="/images/urun.jpg" />
+                </div>
+                <div class="org-form-group">
+                    <label class="org-label">Etiket (HOT / İNDİRİM)</label>
+                    <input name="Badge" class="org-input" />
+                </div>
+            </div>
+            <div class="org-form-group">
+                <label class="org-label">Açıklama</label>
+                <textarea name="Description" class="org-textarea"></textarea>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
+                <div class="org-form-group"><label class="org-label">Kalori</label><input name="CaloriesPer100g" type="number" class="org-input" /></div>
+                <div class="org-form-group"><label class="org-label">Yağ (g)</label><input name="FatPer100g" type="number" step="0.1" class="org-input" /></div>
+                <div class="org-form-group"><label class="org-label">Karbonhidrat (g)</label><input name="CarbsPer100g" type="number" step="0.1" class="org-input" /></div>
+                <div class="org-form-group"><label class="org-label">Protein (g)</label><input name="ProteinPer100g" type="number" step="0.1" class="org-input" /></div>
+            </div>
+            <div class="org-form-group">
+                <label class="org-label">Porsiyon</label>
+                <input name="ServingSize" class="org-input" placeholder="100g" />
+            </div>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:20px;cursor:pointer">
+                <input type="checkbox" name="IsFeatured" value="true" /> Öne Çıkan Ürün
+            </label>
+            <button type="submit" class="btn-green" style="width:100%;justify-content:center;border-radius:8px;padding:12px">Kaydet</button>
+        </form>
+    </div>
+</div>

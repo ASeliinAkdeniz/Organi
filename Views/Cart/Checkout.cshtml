@@ -1,0 +1,81 @@
+﻿@model Organi.Models.ViewModels.CartViewModel
+@{
+    ViewData["Title"] = "Siparişi Tamamla"; ViewData["Page"] = "Cart";
+}
+
+<div class="org-page-header">
+    <div class="org-page-header-content">
+        <h1>Siparişi Tamamla</h1>
+        <div class="org-breadcrumb">
+            <span class="org-breadcrumb-icon">🏠</span>
+            <a asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+            <span>›</span>
+            <a asp-controller="Cart" asp-action="Index">Sepet</a>
+            <span>›</span>
+            <span style="color:white">Sipariş</span>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="padding-top:32px;padding-bottom:48px">
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:28px">
+
+        <!-- Teslimat Bilgileri -->
+        <div>
+            <div style="background:white;border:1px solid #e0e0e0;border-radius:12px;padding:24px">
+                <h2 style="font-size:16px;font-weight:800;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #e0e0e0">Teslimat Bilgileri</h2>
+                <form asp-controller="Cart" asp-action="PlaceOrder" method="post">
+                    @Html.AntiForgeryToken()
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                        <div class="org-form-group">
+                            <label class="org-label">Ad Soyad *</label>
+                            <input name="customerName" class="org-input" required placeholder="Adınız Soyadınız" />
+                        </div>
+                        <div class="org-form-group">
+                            <label class="org-label">E-posta *</label>
+                            <input name="customerEmail" type="email" class="org-input" required placeholder="email@ornek.com" />
+                        </div>
+                    </div>
+                    <div class="org-form-group">
+                        <label class="org-label">Teslimat Adresi *</label>
+                        <textarea name="address" class="org-textarea" required placeholder="Mahalle, cadde, kapı no, ilçe, şehir..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-green" style="width:100%;justify-content:center;border-radius:8px;padding:13px;font-size:15px">
+                        ✓ Siparişi Onayla
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sipariş Özeti -->
+        <div>
+            <div class="org-order-summary">
+                <p class="org-summary-title">Sipariş Özeti</p>
+                @foreach (var item in Model.Items)
+                {
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;gap:8px">
+                        <div style="flex:1;min-width:0">
+                            <p style="font-size:13px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@item.Product!.Name</p>
+                            <p style="font-size:11px;color:#999">@item.Quantity @item.Product.Unit</p>
+                        </div>
+                        <span style="font-size:13px;font-weight:700;color:#4caf50;white-space:nowrap">₺@((item.Product.Price * (decimal)item.Quantity).ToString("F2"))</span>
+                    </div>
+                }
+                <div style="margin-top:12px">
+                    <div class="org-summary-row"><span>Ara Toplam</span><span>₺@Model.Subtotal.ToString("F2")</span></div>
+                    <div class="org-summary-row">
+                        <span>Kargo</span>
+                        <span style="color:@(Model.ShippingFee == 0 ? "#4caf50" : "inherit")">@(Model.ShippingFee == 0 ? "Ücretsiz" : "₺" + Model.ShippingFee.ToString("F2"))</span>
+                    </div>
+                    @if (Model.ShippingFee > 0)
+                    {
+                        <p style="font-size:11px;color:#999;margin-bottom:8px">₺99 üzeri alışverişlerde kargo ücretsiz.</p>
+                    }
+                    <div class="org-summary-total"><span>Toplam</span><span>₺@Model.Total.ToString("F2")</span></div>
+                </div>
+            </div>
+            <a asp-controller="Cart" asp-action="Index" class="btn-outline" style="display:block;text-align:center;margin-top:12px;border-radius:8px;padding:10px">← Sepete Dön</a>
+        </div>
+
+    </div>
+</div>

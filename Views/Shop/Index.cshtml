@@ -1,0 +1,132 @@
+@model Organi.Models.ViewModels.ShopViewModel
+@{ ViewData["Title"] = "Mağaza"; ViewData["Page"] = "Shop"; }
+
+<div class="org-page-header">
+    <div class="org-page-header-content">
+        <h1>Mağaza</h1>
+        <div class="org-breadcrumb">
+            <span class="org-breadcrumb-icon">🏠</span>
+            <a asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+            <span>›</span>
+            <span style="color:white">Mağaza</span>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="org-shop-layout">
+
+        <!-- Sidebar -->
+        <aside class="org-sidebar">
+            <form asp-controller="Shop" asp-action="Index" method="get">
+                <div class="org-sidebar-section">
+                    <p class="org-sidebar-title">Kategoriler</p>
+                    <label class="org-cat-item">
+                        <input type="radio" name="category" value="" @(Model.SelectedCategory==null?"checked":"") onchange="this.form.submit()" /> Tümü
+                    </label>
+                    @foreach (var cat in Enum.GetValues<ProductCategory>())
+                    {
+                        var label = cat switch { ProductCategory.Sebzeler=>"Sebzeler", ProductCategory.Meyveler=>"Meyveler", ProductCategory.SutUrunleri=>"Süt Ürünleri", ProductCategory.Balikci=>"Balıkçı", ProductCategory.Atistirmalik=>"Atıştırmalık", ProductCategory.Icecekler=>"İçecekler", _=>cat.ToString() };
+                        <label class="org-cat-item">
+                            <input type="radio" name="category" value="@((int)cat)" @(Model.SelectedCategory==cat?"checked":"") onchange="this.form.submit()" /> @label
+                        </label>
+                    }
+                </div>
+
+                <div class="org-sidebar-section">
+                    <p class="org-sidebar-title">Fiyata Göre Filtrele</p>
+                    <div style="display:flex;gap:8px;margin-bottom:10px">
+                        <input name="minPrice" type="number" value="@Model.MinPrice" class="org-input" style="width:80px;padding:6px 8px" placeholder="Min" />
+                        <span style="align-self:center;color:#999">—</span>
+                        <input name="maxPrice" type="number" value="@Model.MaxPrice" class="org-input" style="width:80px;padding:6px 8px" placeholder="Max" />
+                    </div>
+                    <button type="submit" class="btn-green" style="width:100%;justify-content:center;border-radius:6px;padding:9px">Filtrele →</button>
+                </div>
+            </form>
+
+            @if (Model.PopularProducts.Any())
+            {
+                <div class="org-sidebar-section">
+                    <p class="org-sidebar-title">Popüler Ürünler</p>
+                    @foreach (var p in Model.PopularProducts)
+                    {
+                        <a asp-controller="Shop" asp-action="Detail" asp-route-id="@p.Id" class="org-popular-item" style="text-decoration:none;display:flex">
+                            <img src="@p.ImageUrl" alt="@p.Name" class="org-popular-img" onerror="this.src='/images/placeholder.png'" />
+                            <div>
+                                <p class="org-popular-name">@p.Name</p>
+                                <div class="org-stars" style="font-size:11px;margin-bottom:2px">@string.Concat(Enumerable.Range(1,5).Select(i=>i<=(int)p.Rating?"★":"☆"))</div>
+                                <span class="org-popular-price">₺@p.Price.ToString("F2")</span>
+                                @if (p.OldPrice.HasValue) { <span class="org-popular-old">₺@p.OldPrice.Value.ToString("F2")</span> }
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+        </aside>
+
+        <!-- Products -->
+        <div>
+            <div class="org-shop-toolbar">
+                <span class="org-shop-count">@Model.TotalCount üründen @(((Model.Page-1)*Model.PageSize)+1)–@(Math.Min(Model.Page*Model.PageSize,Model.TotalCount)) gösteriliyor</span>
+                <form asp-controller="Shop" asp-action="Index" method="get" style="display:inline">
+                    <input type="hidden" name="category" value="@((int?)Model.SelectedCategory)" />
+                    <input type="hidden" name="search" value="@Model.SearchTerm" />
+                    <select name="sort" class="org-shop-sort" onchange="this.form.submit()">
+                        <option value="">Varsayılan</option>
+                        <option value="price_asc" @@(Model.SortBy=="price_asc"?"selected":"")>Fiyat: Düşükten Yükseğe</option>
+                        <option value="price_desc" @@(Model.SortBy=="price_desc"?"selected":"")>Fiyat: Yüksekten Düşüğe</option>
+                        <option value="rating" @@(Model.SortBy=="rating"?"selected":"")>En Yüksek Puan</option>
+                    </select>
+                </form>
+            </div>
+
+            <div class="org-product-grid">
+                @foreach (var p in Model.Products)
+                {
+                    <div class="org-product-card">
+                        <a asp-controller="Shop" asp-action="Detail" asp-route-id="@p.Id">
+                            <img src="@p.ImageUrl" alt="@p.Name" class="org-product-img" onerror="this.src='/images/placeholder.png'" />
+                        </a>
+                        <div class="org-product-body">
+                            @if (!string.IsNullOrEmpty(p.Badge)) { <span class="org-product-badge @(p.Badge=="HOT"?"org-product-badge--hot":"")">@p.Badge</span> }
+                            <p class="org-product-name">@p.Name</p>
+                            <div class="org-stars">@string.Concat(Enumerable.Range(1,5).Select(i=>i<=(int)p.Rating?"★":"☆")) <span>(@p.RatingCount)</span></div>
+                            <div class="org-product-price">
+                                <span class="org-product-price-current">₺@p.Price.ToString("F2")</span>
+                                @if (p.OldPrice.HasValue) { <span class="org-product-price-old">₺@p.OldPrice.Value.ToString("F2")</span> }
+                                <span class="org-product-price-unit">/ @p.Unit</span>
+                            </div>
+                            <div style="display:flex;gap:8px;margin-top:10px">
+                                <form asp-controller="Cart" asp-action="Add" method="post" style="flex:1">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="productId" value="@p.Id" />
+                                    <button type="submit" class="org-add-btn">🛒 Sepete Ekle</button>
+                                </form>
+                                <form asp-controller="Compare" asp-action="Add" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="productId" value="@p.Id" />
+                                    <button type="submit" title="Karşılaştır" style="width:38px;height:38px;border:1px solid #e0e0e0;border-radius:6px;background:white;cursor:pointer;font-size:16px;margin-top:0">⇄</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @{ int totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize); }
+            @if (totalPages > 1)
+            {
+                <div class="org-pagination">
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <a asp-controller="Shop" asp-action="Index" asp-route-page="@i" asp-route-category="@((int?)Model.SelectedCategory)" asp-route-sort="@Model.SortBy" class="org-page-btn @(i==Model.Page?"active":"")">@i</a>
+                    }
+                    @if (Model.Page < totalPages)
+                    {
+                        <a asp-controller="Shop" asp-action="Index" asp-route-page="@(Model.Page+1)" class="org-page-btn">›</a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
