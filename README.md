@@ -1,3 +1,4 @@
+<img width="1904" height="887" alt="Ekran görüntüsü 2026-06-11 172801" src="https://github.com/user-attachments/assets/e8cb9b96-cae5-451e-86a8-080827b1f5a1" />
 🌾 Organi - Premium Organic E-Commerce Platform
 
 Organi, organik tarım ürünlerini çiftlikten doğrudan tüketiciye ulaştıran, kurumsal yazılım mimarisi standartlarında ve tasarım desenleri (Design Patterns) odağında geliştirilmiş bir **ASP.NET Core MVC** e-ticaret web uygulamasıdır.
@@ -70,6 +71,7 @@ Projenin sürdürülebilir, esnek ve kurumsal standartlarda olması için **5 ad
 
 <img width="1909" height="635" alt="Ekran görüntüsü 2026-06-11 170840" src="https://github.com/user-attachments/assets/9665ae51-80a2-45a2-bf7c-d49cf9d7c55c" />
 
+<img width="1904" height="887" alt="Ekran görüntüsü 2026-06-11 172801" src="https://github.com/user-attachments/assets/f3b83edf-f6e8-486b-836e-c1c03d3ff2e3" />
 
 
 
